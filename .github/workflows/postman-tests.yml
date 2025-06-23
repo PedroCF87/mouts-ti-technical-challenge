@@ -47,18 +47,40 @@ jobs:
           REDIS_PORT: ${{ vars.REDIS_PORT }}
           PORT: ${{ vars.PORT }}
           API_URL: ${{ vars.API_URL }}
-        run: docker compose up -d --build
+        run: |
+          docker compose up -d --build
+          docker ps
+          echo ">> -------------------------------------- <<"
 
       - name: Wait for Services to be Ready
         run: |
-          echo "Waiting for the backend to be healthy..."
+          echo "Waiting for the backend container to start..."
+          # Wait for backend container to be running
+          timeout=30
+          interval=5
+          elapsed=0
+          while ! docker ps | grep mouts_backend | grep -q "Up"; do
+            elapsed=$((elapsed + interval))
+            docker ps
+            if [ $elapsed -ge $timeout ]; then
+              echo "Timed out waiting for backend container to start."
+              exit 1
+            fi
+            sleep $interval
+          done
+          echo "Backend container is running. Checking health endpoint..."
+          
+          # Check health endpoint
           timeout=120
           interval=5
           elapsed=0
-          while ! curl -s http://localhost:3001/health; do
+          while ! curl -sf http://localhost:3001/health; do
             elapsed=$((elapsed + interval))
+            echo "Waiting for health endpoint... (${elapsed}s)"
+            docker ps
             if [ $elapsed -ge $timeout ]; then
-              echo "Timed out waiting for backend service."
+              echo "Timed out waiting for backend service health check."
+              docker logs mouts_backend
               exit 1
             fi
             sleep $interval
