@@ -37,7 +37,7 @@ jobs:
           npm install -g newman-reporter-htmlextra
 
       - name: Start Services with Docker Compose
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
       - name: Wait for Services to be Ready
         run: |
@@ -75,4 +75,4 @@ jobs:
 
       - name: Stop Services
         if: always()
-        run: docker-compose down
+        run: docker compose down
