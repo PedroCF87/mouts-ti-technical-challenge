@@ -54,7 +54,7 @@ Siga os passos abaixo para configurar o ambiente de desenvolvimento localmente.
 Com o Docker e o Docker Compose instalados, você pode iniciar toda a aplicação com um único comando a partir da raiz do projeto.
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 O comando acima irá construir as imagens e iniciar os contêineres para o frontend, backend, banco de dados e Redis.
@@ -70,12 +70,12 @@ O projeto adota **TDD** como metodologia principal. Os testes são implementados
 
 -   **Rodar testes do Backend (NestJS):**
     ```bash
-    docker-compose exec backend npm run test
+    docker compose exec backend npm run test
     ```
 
 -   **Rodar testes do Frontend (Next.js):**
     ```bash
-    docker-compose exec frontend npm run test
+    docker compose exec frontend npm run test
     ```
 
 ## Estrutura do Projeto
