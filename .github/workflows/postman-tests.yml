@@ -11,22 +11,68 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install Newman
-        run: npm install -g newman
+      - name: Cache NPM dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('backend/package.json', 'frontend/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Newman and Reporter
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+
+      - name: Start Services with Docker Compose
+        run: docker-compose up -d --build
+
+      - name: Wait for Services to be Ready
+        run: |
+          echo "Waiting for the backend to be healthy..."
+          timeout=120
+          interval=5
+          elapsed=0
+          while ! curl -s http://localhost:3000; do
+            elapsed=$((elapsed + interval))
+            if [ $elapsed -ge $timeout ]; then
+              echo "Timed out waiting for backend service."
+              exit 1
+            fi
+            sleep $interval
+          done
+          echo "Backend is healthy!"
+
+      - name: Create reports directory
+        run: mkdir -p newman-reports
 
       - name: Run Postman Collection
-        run: newman run postman_collection.json
+        run: |
+          newman run postman_collection.json \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export newman-reports/report.html
+
       - name: Upload Newman Report
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: newman-report
+          name: newman-test-report
+          path: newman-reports/
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Stop Services
+        if: always()
+        run: docker-compose down
