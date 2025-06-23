@@ -137,3 +137,4 @@ yarn.lock
 .pnp.*
 
 *.code-workspace
+package-lock.json

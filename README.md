@@ -90,6 +90,9 @@ mouts-ti-test/
 │   │   ├── adapters/                # Adaptadores (controllers, gateways, repositórios)
 │   │   ├── infra/                   # Implementações externas (DB, Redis, etc.)
 │   │   ├── main.ts                  # Ponto de entrada da aplicação
+│   │   ├── database/
+│   │   │   ├── migrations/          # Migrations TypeORM
+│   │   │   └── data-source          # Configuração TypeORM
 │   │   └── app.module.ts            # Módulo raiz da aplicação NestJS
 │   ├── test/                        # Testes automatizados (Jest, TDD)
 │   ├── Dockerfile
