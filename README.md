@@ -84,20 +84,33 @@ O projeto está organizado em uma estrutura de monorepo, com diretórios separad
 
 ```
 mouts-ti-test/
-├── backend/                         # Backend (NestJS, Arquitetura Hexagonal, TypeScript)
-│   ├── src/
-│   │   ├── core/                    # Núcleo da aplicação (domínio, casos de uso, portas)
-│   │   ├── adapters/                # Adaptadores (controllers, gateways, repositórios)
-│   │   ├── infra/                   # Implementações externas (DB, Redis, etc.)
-│   │   ├── main.ts                  # Ponto de entrada da aplicação
-│   │   ├── database/
-│   │   │   ├── migrations/          # Migrations TypeORM
-│   │   │   └── data-source          # Configuração TypeORM
-│   │   └── app.module.ts            # Módulo raiz da aplicação NestJS
-│   ├── test/                        # Testes automatizados (Jest, TDD)
-│   ├── Dockerfile
-│   ├── package.json
-│   └── ...
+├── backend/
+├── src/
+│   ├── core/                    # Núcleo da aplicação
+│   │   ├── domain/             # Entidades e interfaces do domínio
+│   │   │   └── user.repository.ts
+│   │   └── use-cases/          # Casos de uso/serviços
+│   │       ├── user.service.ts
+│   │       └── auth.service.ts
+│   ├── adapters/               # Adaptadores
+│   │   ├── controllers/        # Controladores HTTP
+│   │   │   ├── user.controller.ts
+│   │   │   └── auth.controller.ts
+│   │   └── repositories/       # Implementações de repositórios
+│   │       └── user.repository.ts
+│   ├── infra/                  # Infraestrutura
+│   │   ├── db/
+│   │   │   └── entities/       # Entidades do TypeORM
+│   │   │       └── user.entity.ts
+│   │   └── modules/            # Módulos do NestJS
+│   │       ├── user.module.ts
+│   │       └── auth.module.ts
+│   ├── database/               # Configuração do banco e migrations
+│   │   ├── migrations/
+│   │   └── data-source.ts
+│   ├── main.ts
+│   │── auth.module.ts
+│   └── app.module.ts
 ├── frontend/                        # Frontend (Next.js, TypeScript)
 │   ├── src/
 │   │   ├── app/                     # Rotas e páginas da aplicação (Next.js App Router)

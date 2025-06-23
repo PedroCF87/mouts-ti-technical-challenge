@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { UserEntity } from './user.entity'
+import { UserEntity } from '@/infra/db/entities/user.entity'
+import { UserModule } from '@/infra/modules/user.module'
+import { AuthModule } from '@/infra/modules/auth.module'
 
 @Module({
   imports: [
@@ -18,9 +18,8 @@ import { UserEntity } from './user.entity'
         synchronize: false,
       }),
     }),
-    TypeOrmModule.forFeature([UserEntity]),
+    UserModule,
+    AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
