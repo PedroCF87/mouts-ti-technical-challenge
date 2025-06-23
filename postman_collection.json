@@ -262,7 +262,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"user\",\n  \"isActive\": true\n}"
 						},
 						"url": {
 							"raw": "{{host}}/users",
