@@ -37,6 +37,16 @@ jobs:
           npm install -g newman-reporter-htmlextra
 
       - name: Start Services with Docker Compose
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ vars.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PORT: ${{ vars.REDIS_PORT }}
+          PORT: ${{ vars.PORT }}
+          API_URL: ${{ vars.API_URL }}
         run: docker compose up -d --build
 
       - name: Wait for Services to be Ready
