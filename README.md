@@ -1,18 +1,24 @@
 # Mouts TI - Desafio Full Stack
 
-Este repositório contém a implementação de uma aplicação Full Stack para um teste técnico, utilizando Next.js para o frontend e NestJS para o backend.
+Este repositório contém a implementação de uma aplicação Full Stack para um teste técnico, utilizando **TypeScript** em todo o stack (frontend e backend), com foco em qualidade, arquitetura e boas práticas de desenvolvimento.
 
 ## Descrição do Projeto
 
-O objetivo do projeto é criar um CRUD (Create, Read, Update, Delete) completo de usuários.
+O objetivo do projeto é criar um CRUD (Create, Read, Update, Delete) completo de usuários, aplicando **TDD (Test-Driven Development)** desde o início do desenvolvimento.
 
 A aplicação é composta por:
 
--   **Frontend:** Desenvolvido com **Next.js** e **React Query** para uma gestão de estado do servidor eficiente e otimizada.
--   **Backend:** Uma API RESTful construída com **NestJS**, responsável pela lógica de negócio e comunicação com o banco de dados.
--   **Banco de Dados:** Utiliza um banco de dados relacional (PostgreSQL/MySQL) com **TypeORM** ou **Prisma**.
--   **Cache:** Implementação de cache com **Redis** para otimizar as consultas de usuários.
--   **Testes:** Testes unitários e de integração com **Jest** em ambas as aplicações para garantir a qualidade e a robustez do código.
+-   **Frontend:** Desenvolvido com **Next.js** (em TypeScript) e **React Query** para uma gestão eficiente do estado do servidor. O frontend consome a API do backend e segue boas práticas de componentização e testes automatizados.
+-   **Backend:** API RESTful construída com **NestJS** (em TypeScript), estruturada segundo a **Arquitetura Hexagonal (Ports & Adapters)**, promovendo separação de responsabilidades, testabilidade e flexibilidade. O backend implementa TDD com testes unitários e de integração desde o início.
+-   **Banco de Dados:** Utiliza **PostgreSQL** (padrão) com **TypeORM** para mapeamento objeto-relacional.
+-   **Cache:** Implementação de cache com **Redis** para otimizar consultas de usuários.
+-   **Testes:** Testes unitários e de integração com **Jest** em ambas as aplicações, seguindo o ciclo TDD para garantir qualidade e robustez do código.
+
+## Abordagem de Desenvolvimento
+
+- **TypeScript em todo o projeto:** Garantindo tipagem estática, segurança e melhor manutenção do código.
+- **TDD (Test-Driven Development):** O desenvolvimento de novas funcionalidades é guiado por testes, promovendo código confiável e fácil de evoluir.
+- **Arquitetura Hexagonal no Backend:** O backend é organizado em camadas (core, application, domain, infra/adapters), facilitando testes, manutenção e evolução.
 
 ## Pré-requisitos
 
@@ -58,9 +64,9 @@ Após a inicialização, os serviços estarão disponíveis nos seguintes endere
 -   **Frontend (Next.js):** `http://localhost:3000`
 -   **Backend (NestJS API):** `http://localhost:3001`
 
-## Testes
+## Testes e TDD
 
-Os testes unitários foram implementados com Jest para validar os casos de uso e a lógica de negócio. Para executar os testes, utilize os seguintes comandos:
+O projeto adota **TDD** como metodologia principal. Os testes são implementados antes das funcionalidades, garantindo que todo código novo seja coberto por testes automatizados.
 
 -   **Rodar testes do Backend (NestJS):**
     ```bash
@@ -74,32 +80,41 @@ Os testes unitários foram implementados com Jest para validar os casos de uso e
 
 ## Estrutura do Projeto
 
-O projeto está organizado em uma estrutura de monorepo, com diretórios separados para o frontend e o backend.
+O projeto está organizado em uma estrutura de monorepo, com diretórios separados para frontend e backend, ambos em TypeScript. O backend segue a arquitetura hexagonal.
 
 ```
 mouts-ti-test/
-├── backend/                         # Aplicação principal com arquitetura hexagonal (NestJS)
+├── backend/                         # Backend (NestJS, Arquitetura Hexagonal, TypeScript)
 │   ├── src/
-│   │   ├── users/                   # Módulo de usuários (entidades, services, DTOs, repositórios)
-│   │   ├── core/                    # Núcleo da aplicação (ports, use cases, regras de negócio)
-│   │   ├── infra/                   # Adaptadores de saída (banco de dados, Redis, etc.)
-│   │   ├── main.ts                 # Ponto de entrada da aplicação
-│   │   └── app.module.ts          # Módulo raiz da aplicação NestJS
-│   ├── test/                       # Testes automatizados (Jest)
+│   │   ├── core/                    # Núcleo da aplicação (domínio, casos de uso, portas)
+│   │   ├── adapters/                # Adaptadores (controllers, gateways, repositórios)
+│   │   ├── infra/                   # Implementações externas (DB, Redis, etc.)
+│   │   ├── main.ts                  # Ponto de entrada da aplicação
+│   │   └── app.module.ts            # Módulo raiz da aplicação NestJS
+│   ├── test/                        # Testes automatizados (Jest, TDD)
 │   ├── Dockerfile
-│   └── package.json
-├── frontend/                        # Interface web e BFF (Next.js)
+│   ├── package.json
+│   └── ...
+├── frontend/                        # Frontend (Next.js, TypeScript)
 │   ├── src/
-│   │   ├── app/                    # Rotas e páginas da aplicação (Next.js App Router)
-│   │   ├── api/                   # Rotas API (BFF) que intermediam chamadas ao backend
-│   │   │   ├── users/             # Ex: `GET /api/users` chama o backend e adapta resposta
-│   │   │   └── utils/             # Funções auxiliares (ex: adaptadores de payload)
-│   │   ├── components/            # Componentes React reutilizáveis
-│   │   ├── hooks/                 # Hooks customizados (React Query, etc.)
-│   │   └── lib/                   # Clientes HTTP, configurações globais
-│   ├── tests/                     # Testes automatizados do frontend (Jest)
+│   │   ├── app/                     # Rotas e páginas da aplicação (Next.js App Router)
+│   │   ├── api/                     # Rotas API (BFF) que intermediam chamadas ao backend
+│   │   ├── components/              # Componentes React reutilizáveis
+│   │   ├── hooks/                   # Hooks customizados (React Query, etc.)
+│   │   └── lib/                     # Clientes HTTP, configurações globais
+│   ├── tests/                       # Testes automatizados do frontend (Jest, TDD)
 │   ├── Dockerfile
-│   └── package.json
-├── docker-compose.yml              # Orquestração dos serviços (backend, frontend, banco e Redis)
-└── README.md                       # Documentação do projeto
+│   ├── package.json
+│   └── ...
+├── docker-compose.yml               # Orquestração dos serviços (backend, frontend, banco e Redis)
+└── README.md                        # Documentação do projeto
 ```
+
+> **Observação:**
+> - O backend está organizado em `core` (domínio, casos de uso, portas), `adapters` (controllers, gateways, repositórios) e `infra` (implementações externas), seguindo a arquitetura hexagonal.
+> - O frontend utiliza Next.js com TypeScript e React Query, com testes automatizados e estrutura modular.
+> - O ciclo de desenvolvimento é guiado por TDD, com cobertura de testes desde o início.
+
+---
+
+Sinta-se à vontade para contribuir, sugerir melhorias ou tirar dúvidas!
