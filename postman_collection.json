@@ -18,6 +18,28 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"const jsonData = pm.response.json();",
+									"",
+									"// ✅ Verifica se a resposta retornou status 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// ✅ Verifica se o corpo da resposta contém access_token",
+									"pm.test(\"Response contains access token\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"access_token\");",
+									"  pm.expect(jsonData.access_token).to.be.a(\"string\").and.not.be.empty;",
+									"});",
+									"",
+									"// ✅ Verifica se o corpo da resposta contém refresh_token",
+									"pm.test(\"Response contains refresh token\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"refresh_token\");",
+									"  pm.expect(jsonData.refresh_token).to.be.a(\"string\").and.not.be.empty;",
+									"});",
+									"",
+									"// 💾 Salva os tokens como variáveis de ambiente",
+									"pm.environment.set(\"access_token\", jsonData.access_token);",
+									"pm.environment.set(\"refresh_token\", jsonData.refresh_token);",
 									""
 								],
 								"type": "text/javascript",
@@ -56,6 +78,41 @@
 				},
 				{
 					"name": "Refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"",
+									"// ✅ Verifica status HTTP",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// ✅ Verifica se um novo access token foi retornado",
+									"pm.test(\"Response contains new access token\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"access_token\");",
+									"  pm.expect(jsonData.access_token).to.be.a(\"string\").and.not.be.empty;",
+									"});",
+									"",
+									"// ✅ Atualiza variável de ambiente com novo access token",
+									"pm.environment.set(\"access_token\", jsonData.access_token);",
+									"",
+									"// ✅ (Opcional) Se também retorna novo refresh_token",
+									"if (jsonData.refresh_token) {",
+									"  pm.test(\"Response contains new refresh token\", function () {",
+									"    pm.expect(jsonData.refresh_token).to.be.a(\"string\").and.not.be.empty;",
+									"    pm.environment.set(\"refresh_token\", jsonData.refresh_token);",
+									"  });",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -91,6 +148,32 @@
 				},
 				{
 					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// ✅ Verifica se o logout foi bem-sucedido",
+									"pm.test(\"Status code is 200 or 204\", function () {",
+									"  pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"});",
+									"",
+									"// ✅ (Opcional) Confirma que o refresh_token foi aceito e logout foi processado",
+									"pm.test(\"Logout success response\", function () {",
+									"  const body = pm.response.text();",
+									"  pm.expect(body.toLowerCase()).to.include(\"success\");",
+									"});",
+									"",
+									"// 🧹 Limpa os tokens do ambiente após logout",
+									"pm.environment.unset(\"access_token\");",
+									"pm.environment.unset(\"refresh_token\");",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -132,6 +215,34 @@
 			"item": [
 				{
 					"name": "Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"",
+									"// ✅ Verifica se a resposta tem status 201",
+									"pm.test(\"Status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// ✅ Verifica se a resposta contém os dados esperados",
+									"pm.test(\"Response contains user data\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"id\");",
+									"  pm.expect(jsonData).to.have.property(\"name\", \"New User\");",
+									"  pm.expect(jsonData).to.have.property(\"email\", \"newuser@example.com\");",
+									"});",
+									"",
+									"// 💾 Armazena o ID do usuário criado (útil para os testes seguintes: GET, PUT, DELETE)",
+									"pm.environment.set(\"created_user_id\", jsonData.id);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -142,7 +253,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"securepassword123\"\n}"
+							"raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/users",
@@ -158,6 +269,43 @@
 				},
 				{
 					"name": "Get All",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"",
+									"// ✅ Verifica se o status da resposta é 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// ✅ Verifica se a resposta é um array",
+									"pm.test(\"Response is an array\", function () {",
+									"  pm.expect(jsonData).to.be.an(\"array\");",
+									"});",
+									"",
+									"// ✅ Verifica se o array contém ao menos um usuário (opcional, depende do estado do banco)",
+									"pm.test(\"Contains at least one user\", function () {",
+									"  pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"// ✅ (Opcional) Verifica se o usuário criado está presente na lista",
+									"const createdUserId = pm.environment.get(\"created_user_id\");",
+									"if (createdUserId) {",
+									"  const userFound = jsonData.some(user => user.id == createdUserId);",
+									"  pm.test(\"Created user is present in the list\", function () {",
+									"    pm.expect(userFound).to.be.true;",
+									"  });",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -175,6 +323,32 @@
 				},
 				{
 					"name": "Get by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const expectedId = pm.environment.get(\"created_user_id\");",
+									"",
+									"// ✅ Verifica se o status da resposta é 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// ✅ Verifica se os dados do usuário retornado são válidos",
+									"pm.test(\"Returned user has correct ID\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"id\", parseInt(expectedId));",
+									"  pm.expect(jsonData).to.have.property(\"name\");",
+									"  pm.expect(jsonData).to.have.property(\"email\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -190,7 +364,7 @@
 							"variable": [
 								{
 									"key": "userID",
-									"value": "1"
+									"value": "{{created_user_id}}"
 								}
 							]
 						}
@@ -199,6 +373,36 @@
 				},
 				{
 					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const expectedId = pm.environment.get(\"created_user_id\");",
+									"",
+									"// ✅ Verifica se o status é 200 (ou altere para 204 se não retornar corpo)",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// ✅ Verifica se o ID continua o mesmo",
+									"pm.test(\"User ID remains unchanged\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"id\", parseInt(expectedId));",
+									"});",
+									"",
+									"// ✅ Verifica se os dados foram atualizados corretamente",
+									"pm.test(\"User data updated\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"name\", \"Updated User\");",
+									"  pm.expect(jsonData).to.have.property(\"email\", \"updateduser@example.com\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -209,7 +413,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\"\n}"
+							"raw": "{\n  \"name\": \"Updated User\",\n  \"email\": \"updateduser@example.com\"\n}"
 						},
 						"url": {
 							"raw": "{{host}}/users/:userID",
@@ -223,7 +427,7 @@
 							"variable": [
 								{
 									"key": "userID",
-									"value": "1"
+									"value": "{{created_user_id}}"
 								}
 							]
 						}
@@ -232,6 +436,35 @@
 				},
 				{
 					"name": "Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const status = pm.response.code;",
+									"",
+									"// ✅ Verifica se o status da resposta é 204 ou 200",
+									"pm.test(\"Status code is 204 or 200\", function () {",
+									"  pm.expect(status).to.be.oneOf([200, 204]);",
+									"});",
+									"",
+									"// ✅ (Opcional) Se retornar uma mensagem de confirmação",
+									"if (status === 200) {",
+									"  const jsonData = pm.response.json();",
+									"  pm.test(\"Response contains confirmation message\", function () {",
+									"    pm.expect(jsonData.message || jsonData.msg || \"\").to.match(/(deleted|success|remov)/i);",
+									"  });",
+									"}",
+									"",
+									"// 🧹 Remove a variável do ID, já que o usuário foi deletado",
+									"pm.environment.unset(\"created_user_id\");",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -247,7 +480,7 @@
 							"variable": [
 								{
 									"key": "userID",
-									"value": "1"
+									"value": "{{created_user_id}}"
 								}
 							]
 						}
@@ -283,6 +516,21 @@
 		{
 			"key": "host",
 			"value": "http://localhost:3001",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "created_user_id",
+			"value": "",
 			"type": "string"
 		}
 	]
