@@ -55,9 +55,6 @@ services:
       API_URL: ${API_URL}
     ports:
       - '3000:3000'
-    volumes:
-      - ./frontend:/app
-    command: npm run start
 
 volumes:
   postgres_data:
