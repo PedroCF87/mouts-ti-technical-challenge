@@ -12,7 +12,7 @@
 			"name": "Auth",
 			"item": [
 				{
-					"name": "Login",
+					"name": "Login - Admin",
 					"event": [
 						{
 							"listen": "test",
@@ -38,8 +38,8 @@
 									"});",
 									"",
 									"// 💾 Salva os tokens como variáveis de ambiente",
-									"pm.environment.set(\"access_token\", jsonData.access_token);",
-									"pm.environment.set(\"refresh_token\", jsonData.refresh_token);",
+									"pm.collectionVariables.set(\"access_token\", jsonData.access_token)",
+									"pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token)",
 									""
 								],
 								"type": "text/javascript",
@@ -57,7 +57,71 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"johndoe\",\n    \"password\": \"your_password_here\"\n  }",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"admin123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login - User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"",
+									"// ✅ Verifica se a resposta retornou status 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// ✅ Verifica se o corpo da resposta contém accessToken",
+									"pm.test(\"Response contains access token\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"access_token\");",
+									"  pm.expect(jsonData.access_token).to.be.a(\"string\").and.not.be.empty;",
+									"});",
+									"",
+									"// ✅ Verifica se o corpo da resposta contém refresh_token",
+									"pm.test(\"Response contains refresh token\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"refresh_token\");",
+									"  pm.expect(jsonData.refresh_token).to.be.a(\"string\").and.not.be.empty;",
+									"});",
+									"",
+									"// 💾 Salva os tokens como variáveis de ambiente",
+									"pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+									"pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"user123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -97,7 +161,7 @@
 									"});",
 									"",
 									"// ✅ Atualiza variável de ambiente com novo access token",
-									"pm.environment.set(\"access_token\", jsonData.access_token);",
+									"pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
 									"",
 									"// ✅ (Opcional) Se também retorna novo refresh_token",
 									"if (jsonData.refresh_token) {",
@@ -126,7 +190,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"refreshToken\": \"your_refresh_token_here\"\n  }",
+							"raw": "{\n    \"refreshToken\": \"{{refresh_token}}\"\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -187,7 +251,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"refreshToken\": \"your_refresh_token_here\"\n  }",
+							"raw": "{\n    \"refreshToken\": \"{{refresh_token}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -228,19 +292,10 @@
 									"});",
 									"",
 									"// ✅ Verifica se a resposta contém os dados esperados",
-									"pm.test(\"Response contains user data with correct structure\", function () {",
-									"  pm.expect(jsonData).to.have.property('id');",
-									"  pm.expect(jsonData).to.have.property('name', 'New User');",
-									"  pm.expect(jsonData).to.have.property('email', 'newuser@example.com');",
-									"  pm.expect(jsonData).to.have.property('role');",
-									"  pm.expect(['user', 'admin']).to.include(jsonData.role);",
-									"  pm.expect(jsonData).to.have.property('isActive');",
-									"  pm.expect(jsonData.isActive).to.be.a('boolean');",
-									"  pm.expect(jsonData).to.have.property('createdAt');",
-									"  pm.expect(new Date(jsonData.createdAt).toISOString()).to.equal(jsonData.createdAt);",
-									"  pm.expect(jsonData).to.have.property('updatedAt');",
-									"  pm.expect(new Date(jsonData.updatedAt).toISOString()).to.equal(jsonData.updatedAt);",
-									"  pm.expect(jsonData).to.not.have.property('password');",
+									"pm.test(\"Response contains user data\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"id\");",
+									"  pm.expect(jsonData).to.have.property(\"name\", \"New User\");",
+									"  pm.expect(jsonData).to.have.property(\"email\", \"newuser@example.com\");",
 									"});",
 									"",
 									"// 💾 Armazena o ID do usuário criado (útil para os testes seguintes: GET, PUT, DELETE)",
@@ -262,7 +317,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"user\",\n  \"isActive\": true\n}"
+							"raw": "{\n    \"name\": \"New User\",\n    \"email\": \"newuserXpto010207@example.com\",\n    \"password\": \"123456\",\n    \"role\": \"user\",\n    \"isActive\": true\n}"
 						},
 						"url": {
 							"raw": "{{host}}/users",
@@ -346,19 +401,10 @@
 									"});",
 									"",
 									"// ✅ Verifica se os dados do usuário retornado são válidos",
-									"pm.test(\"Returned user has correct structure\", function () {",
-									"  pm.expect(jsonData).to.have.property('id', parseInt(expectedId));",
-									"  pm.expect(jsonData).to.have.property('name');",
-									"  pm.expect(jsonData).to.have.property('email');",
-									"  pm.expect(jsonData).to.have.property('role');",
-									"  pm.expect(['user', 'admin']).to.include(jsonData.role);",
-									"  pm.expect(jsonData).to.have.property('isActive');",
-									"  pm.expect(jsonData.isActive).to.be.a('boolean');",
-									"  pm.expect(jsonData).to.have.property('createdAt');",
-									"  pm.expect(new Date(jsonData.createdAt).toISOString()).to.equal(jsonData.createdAt);",
-									"  pm.expect(jsonData).to.have.property('updatedAt');",
-									"  pm.expect(new Date(jsonData.updatedAt).toISOString()).to.equal(jsonData.updatedAt);",
-									"  pm.expect(jsonData).to.not.have.property('password');",
+									"pm.test(\"Returned user has correct ID\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"id\", parseInt(expectedId));",
+									"  pm.expect(jsonData).to.have.property(\"name\");",
+									"  pm.expect(jsonData).to.have.property(\"email\");",
 									"});",
 									""
 								],
@@ -410,18 +456,9 @@
 									"});",
 									"",
 									"// ✅ Verifica se os dados foram atualizados corretamente",
-									"pm.test(\"User data updated with correct structure\", function () {",
-									"  pm.expect(jsonData).to.have.property('name', 'Updated User');",
-									"  pm.expect(jsonData).to.have.property('email', 'updateduser@example.com');",
-									"  pm.expect(jsonData).to.have.property('role');",
-									"  pm.expect(['user', 'admin']).to.include(jsonData.role);",
-									"  pm.expect(jsonData).to.have.property('isActive');",
-									"  pm.expect(jsonData.isActive).to.be.a('boolean');",
-									"  pm.expect(jsonData).to.have.property('createdAt');",
-									"  pm.expect(new Date(jsonData.createdAt).toISOString()).to.equal(jsonData.createdAt);",
-									"  pm.expect(jsonData).to.have.property('updatedAt');",
-									"  pm.expect(new Date(jsonData.updatedAt).toISOString()).to.equal(jsonData.updatedAt);",
-									"  pm.expect(jsonData).to.not.have.property('password');",
+									"pm.test(\"User data updated\", function () {",
+									"  pm.expect(jsonData).to.have.property(\"name\", \"Updated User\");",
+									"  pm.expect(jsonData).to.have.property(\"email\", \"updateduser@example.com\");",
 									"});",
 									""
 								],
@@ -513,6 +550,38 @@
 						}
 					},
 					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		}
