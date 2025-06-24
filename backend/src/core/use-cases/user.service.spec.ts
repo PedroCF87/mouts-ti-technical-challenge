@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { IUserRepository } from '@/core/domain/repositories/user.repository';
 import { User } from '@/core/domain/entities/user';
+import { RedisService } from '@/infra/redis/redis.service';
 
 describe('UserService', () => {
   let service: UserService;
@@ -34,6 +35,7 @@ describe('UserService', () => {
       providers: [
         UserService,
         { provide: 'IUserRepository', useValue: userRepository },
+        { provide: RedisService, useValue: { get: jest.fn(), set: jest.fn(), del: jest.fn() } },
       ],
     }).compile();
 

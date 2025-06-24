@@ -59,7 +59,6 @@ export class UserRepository implements IUserRepository {
     const user = new User();
     user.id = entity.id;
     user.email = entity.email;
-    user.password = entity.password;
     user.role = entity.role;
     user.name = entity.name;
     user.isActive = entity.isActive;

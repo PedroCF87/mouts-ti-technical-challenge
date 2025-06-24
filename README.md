@@ -64,6 +64,19 @@ Após a inicialização, os serviços estarão disponíveis nos seguintes endere
 -   **Frontend (Next.js):** `http://localhost:3000`
 -   **Backend (NestJS API):** `http://localhost:3001`
 
+## Acesso à Aplicação
+
+A tela de listagem de usuários é protegida e requer autenticação. Para acessar, utilize os seguintes dados de login:
+
+```json
+{
+    "email": "user@example.com",
+    "password": "user123"
+}
+```
+
+Esses dados são inseridos no banco de dados através de uma *migration* durante a inicialização do backend, garantindo que um usuário de teste esteja sempre disponível.
+
 ## Testes e TDD
 
 O projeto adota **TDD** como metodologia principal. Os testes são implementados antes das funcionalidades, garantindo que todo código novo seja coberto por testes automatizados.

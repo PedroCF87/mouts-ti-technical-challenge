@@ -4,6 +4,7 @@ import { UserEntity } from '@/infra/db/entities/user.entity'
 import { UserModule } from '@/infra/modules/user.module'
 import { AuthModule } from '@/infra/modules/auth.module'
 import { HealthModule } from '@/infra/modules/health.module'
+import { RedisModule } from './infra/redis/redis.module'
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { HealthModule } from '@/infra/modules/health.module'
     UserModule,
     AuthModule,
     HealthModule,
+    RedisModule,
   ],
 })
 export class AppModule {}
