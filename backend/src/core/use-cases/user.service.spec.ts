@@ -7,6 +7,7 @@ import { RedisService } from '@/infra/redis/redis.service';
 describe('UserService', () => {
   let service: UserService;
   let userRepository: jest.Mocked<IUserRepository>;
+  let moduleRef: TestingModule;
 
   const generateUserMock = (overrides = {}): User => ({
     email: `test${Math.random().toString(36).substring(2, 8)}@example.com`,
@@ -31,7 +32,7 @@ describe('UserService', () => {
       delete: jest.fn(),
     } as any;
 
-    const module: TestingModule = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         UserService,
         { provide: 'IUserRepository', useValue: userRepository },
@@ -39,7 +40,11 @@ describe('UserService', () => {
       ],
     }).compile();
 
-    service = module.get<UserService>(UserService);
+    service = moduleRef.get<UserService>(UserService);
+  });
+
+  afterAll(async () => {
+    await moduleRef.close();
   });
 
   it('should be defined', () => {

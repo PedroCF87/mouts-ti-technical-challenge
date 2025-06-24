@@ -23,9 +23,10 @@ describe('AuthService', () => {
   let authService: AuthService;
   let userRepository: ReturnType<typeof mockUserRepository>;
   let jwtService: ReturnType<typeof mockJwtService>;
+  let moduleRef: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    moduleRef = await Test.createTestingModule({
       providers: [
         AuthService,
         { provide: UserRepository, useFactory: mockUserRepository },
@@ -33,9 +34,13 @@ describe('AuthService', () => {
       ],
     }).compile();
 
-    authService = module.get<AuthService>(AuthService);
-    userRepository = module.get(UserRepository);
-    jwtService = module.get(JwtService);
+    authService = moduleRef.get<AuthService>(AuthService);
+    userRepository = moduleRef.get(UserRepository);
+    jwtService = moduleRef.get(JwtService);
+  });
+
+  afterAll(async () => {
+    await moduleRef.close();
   });
 
   describe('login', () => {
