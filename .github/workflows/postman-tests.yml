@@ -45,6 +45,7 @@ jobs:
           DB_NAME: ${{ secrets.DB_NAME }}
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: ${{ vars.REDIS_PORT }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           PORT: ${{ vars.PORT }}
           API_URL: ${{ vars.API_URL }}
         run: |

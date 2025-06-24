@@ -13,8 +13,9 @@ import { UserEntity } from '@/infra/db/entities/user.entity';
     {
       provide: 'IUserRepository',
       useClass: UserRepository,
-    }
+    },
+    UserRepository
   ],
-  exports: [UserService]
+  exports: [UserService, UserRepository, 'IUserRepository']
 })
 export class UserModule {}

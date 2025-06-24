@@ -39,6 +39,7 @@ services:
       DB_NAME: ${DB_NAME}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - '3001:3001'
     volumes:

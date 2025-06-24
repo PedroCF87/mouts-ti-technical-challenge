@@ -18,6 +18,11 @@ export class UserRepository implements IUserRepository {
     return this.mapToUser(savedEntity);
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    const entity = await this.repository.findOneBy({ email });
+    return entity ? this.mapToUser(entity) : null;
+  }
+
   async findById(id: string): Promise<User | null> {
     const entity = await this.repository.findOneBy({ id });
     return entity ? this.mapToUser(entity) : null;
@@ -52,9 +57,5 @@ export class UserRepository implements IUserRepository {
 
   async delete(id: string): Promise<void> {
     await this.repository.delete(id);
-  }
-
-  async findByEmail(email: string): Promise<User | null> {
-    return this.repository.findOneBy({ email });
   }
 }

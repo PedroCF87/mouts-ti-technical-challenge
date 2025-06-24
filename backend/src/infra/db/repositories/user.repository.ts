@@ -13,32 +13,49 @@ export class UserRepository implements IUserRepository {
   ) {}
 
   async create(user: User): Promise<User> {
-    return {
-      error: 'Coming soon'
-    } as any
+    const newUser = this.repository.create(user);
+    const savedUser = await this.repository.save(newUser);
+    return this.mapToUser(savedUser);
   }
 
   async findAll(): Promise<User[]> {
-    return {
-      error: 'Coming soon'
-    } as any
+    const users = await this.repository.find();
+    return users.map(user => this.mapToUser(user));
   }
 
   async findById(id: string): Promise<User | null> {
-    return {
-      error: 'Coming soon'
-    } as any
+    const user = await this.repository.findOneBy({ id });
+    return user ? this.mapToUser(user) : null;
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const user = await this.repository.findOneBy({ email });
+    return user ? this.mapToUser(user) : null;
   }
 
   async update(id: string, user: Partial<User>): Promise<User> {
-    return {
-      error: 'Coming soon'
-    } as any
+    await this.repository.update(id, user);
+    const updatedUser = await this.repository.findOneBy({ id });
+    if (!updatedUser) {
+      throw new Error('User not found');
+    }
+    return this.mapToUser(updatedUser);
   }
 
   async delete(id: string): Promise<void> {
-    return {
-      error: 'Coming soon'
-    } as any
+    await this.repository.delete(id);
+  }
+
+  private mapToUser(entity: UserEntity): User {
+    const user = new User();
+    user.id = entity.id;
+    user.email = entity.email;
+    user.password = entity.password;
+    user.role = entity.role;
+    user.name = entity.name;
+    user.isActive = entity.isActive;
+    user.createdAt = entity.createdAt;
+    user.updatedAt = entity.updatedAt;
+    return user;
   }
 }

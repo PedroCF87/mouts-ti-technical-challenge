@@ -1,5 +1,6 @@
-import { Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, HttpCode, HttpStatus, Body } from '@nestjs/common';
 import { AuthService } from '../../core/use-cases/auth.service';
+import { LoginDto, RefreshTokenDto, LogoutDto } from '../dtos/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -7,25 +8,19 @@ export class AuthController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  login() {
-    return {
-      error: 'Coming soon'
-    };
+  login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
   }
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  refreshToken() {
-    return {
-      error: 'Coming soon'
-    };
+  refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshToken(refreshTokenDto);
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout() {
-    return {
-      error: 'Coming soon'
-    };
+  logout(@Body() logoutDto: LogoutDto) {
+    return this.authService.logout(logoutDto);
   }
 }
