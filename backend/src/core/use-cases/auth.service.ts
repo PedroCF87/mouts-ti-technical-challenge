@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt'
 import { compare } from 'bcrypt'
 import { LoginDto, RefreshTokenDto, LogoutDto } from '@/adapters/dtos/auth.dto'
 import { UserRepository } from '@/adapters/repositories/user.repository'
-import Redis from 'ioredis';
+import Redis from 'ioredis'
 
 @Injectable()
 export class AuthService {
