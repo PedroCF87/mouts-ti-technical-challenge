@@ -77,20 +77,6 @@ A tela de listagem de usuários é protegida e requer autenticação. Para acess
 
 Esses dados são inseridos no banco de dados através de uma *migration* durante a inicialização do backend, garantindo que um usuário de teste esteja sempre disponível.
 
-## Testes e TDD
-
-O projeto adota **TDD** como metodologia principal. Os testes são implementados antes das funcionalidades, garantindo que todo código novo seja coberto por testes automatizados.
-
--   **Rodar testes do Backend (NestJS):**
-    ```bash
-    docker compose exec backend npm run test
-    ```
-
--   **Rodar testes do Frontend (Next.js):**
-    ```bash
-    docker compose exec frontend npm run test
-    ```
-
 ## Como Executar os Testes
 
 Para rodar todos os testes automatizados do backend, execute o comando abaixo a partir da raiz do projeto:
