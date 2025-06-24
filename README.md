@@ -105,7 +105,7 @@ Este projeto conta com um pipeline de Integração Contínua (CI) implementado v
 
 - O workflow está localizado em [`.github/workflows/unit-tests.yml`](.github/workflows/unit-tests.yml).
 - Todos os testes do backend são executados automaticamente a cada commit e pull request.
-- O status do pipeline pode ser acompanhado diretamente no GitHub.
+- O status do pipeline pode ser acompanhado [diretamente no GitHub](https://github.com/PedroCF87/mouts-ti-technical-challenge/actions/workflows/unit-tests.yml).
 
 Isso garante que a base de código permaneça confiável e que todas as contribuições sejam devidamente testadas antes de serem integradas.
 
