@@ -109,7 +109,7 @@ Este projeto conta com um pipeline de Integração Contínua (CI) implementado v
 
 Isso garante que a base de código permaneça confiável e que todas as contribuições sejam devidamente testadas antes de serem integradas.
 
-![https://raw.githubusercontent.com/PedroCF87/mouts-ti-technical-challenge/refs/heads/main/test-pipeline.png](test-pipeline)
+![https://github.com/PedroCF87/mouts-ti-technical-challenge/blob/main/test-pipeline.png?raw=true](test-pipeline)
 
 ---
 
