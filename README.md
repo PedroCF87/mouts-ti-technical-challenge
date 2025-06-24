@@ -97,6 +97,20 @@ Esse comando irá rodar todos os testes unitários e de integração do backend 
 > - Certifique-se de que as dependências estejam instaladas (`yarn install`) antes de rodar os testes.
 > - O comando pode ser executado tanto em ambiente local quanto dentro do container Docker (usando `docker compose exec backend yarn test:backend`).
 
+## Integração Contínua (CI)
+
+> **Pipeline automatizado com GitHub Actions**
+
+Este projeto conta com um pipeline de Integração Contínua (CI) implementado via **GitHub Actions**. A cada push ou pull request, o pipeline é executado automaticamente, instalando as dependências e rodando todos os testes do backend para garantir a qualidade do código e evitar regressões.
+
+- O workflow está localizado em [`.github/workflows/unit-tests.yml`](.github/workflows/unit-tests.yml).
+- Todos os testes do backend são executados automaticamente a cada commit e pull request.
+- O status do pipeline pode ser acompanhado diretamente no GitHub.
+
+Isso garante que a base de código permaneça confiável e que todas as contribuições sejam devidamente testadas antes de serem integradas.
+
+---
+
 ## Estrutura do Projeto
 
 O projeto está organizado em uma estrutura de monorepo, com diretórios separados para frontend e backend, ambos em TypeScript. O backend segue a arquitetura hexagonal.
