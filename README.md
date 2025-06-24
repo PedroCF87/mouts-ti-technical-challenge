@@ -78,6 +78,20 @@ O projeto adota **TDD** como metodologia principal. Os testes são implementados
     docker compose exec frontend npm run test
     ```
 
+## Como Executar os Testes
+
+Para rodar todos os testes automatizados do backend, execute o comando abaixo a partir da raiz do projeto:
+
+```bash
+yarn test:backend
+```
+
+Esse comando irá rodar todos os testes unitários e de integração do backend utilizando o Jest, exibindo o resultado detalhado (verbose) de cada teste.
+
+> **Dica:**
+> - Certifique-se de que as dependências estejam instaladas (`yarn install`) antes de rodar os testes.
+> - O comando pode ser executado tanto em ambiente local quanto dentro do container Docker (usando `docker compose exec backend yarn test:backend`).
+
 ## Estrutura do Projeto
 
 O projeto está organizado em uma estrutura de monorepo, com diretórios separados para frontend e backend, ambos em TypeScript. O backend segue a arquitetura hexagonal.

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Repository } from 'typeorm'
+import { Repository, QueryFailedError } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserEntity } from '@/infra/db/entities/user.entity'
 import { IUserRepository } from '@/core/domain/repositories/user.repository'
@@ -12,10 +12,19 @@ export class UserRepository implements IUserRepository {
     private readonly repository: Repository<UserEntity>,
   ) {}
 
-  async create(user: User): Promise<User> {
-    const newUser = this.repository.create(user);
-    const savedUser = await this.repository.save(newUser);
-    return this.mapToUser(savedUser);
+  async create(user: User): Promise<User | { error: string }> {
+    try {
+      const newUser = this.repository.create(user)
+      const savedUser = await this.repository.save(newUser)
+      return this.mapToUser(savedUser)
+
+    } catch (error) {
+
+      if (error instanceof QueryFailedError && (error as any).code === '23505') {
+        return { error: 'E-mail já cadastrado.' };
+      }
+      return { error: error.message ?? 'User not created' };
+    }
   }
 
   async findAll(): Promise<User[]> {

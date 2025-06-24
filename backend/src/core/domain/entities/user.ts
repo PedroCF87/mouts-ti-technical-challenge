@@ -1,6 +1,6 @@
 // Classe que representa uma entidade User no domínio
 export class User {
-  id: string;
+  id?: string;
   email: string;
   password: string;
   role: string;

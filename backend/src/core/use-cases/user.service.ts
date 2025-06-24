@@ -1,6 +1,6 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { IUserRepository } from '@/core/domain/repositories/user.repository';
-import { User } from '@/core/domain/entities/user';
+import { Injectable, Inject } from '@nestjs/common'
+import { IUserRepository } from '@/core/domain/repositories/user.repository'
+import { User } from '@/core/domain/entities/user'
 
 @Injectable()
 export class UserService {
@@ -9,23 +9,27 @@ export class UserService {
     private readonly userRepository: IUserRepository
   ) {}
 
-  async create(userData: Partial<User>): Promise<User> {
-    return this.userRepository.create(userData);
+  async create(userData: Partial<User>): Promise<User | { error: string }> {
+    try {
+      return await this.userRepository.create(userData)
+    } catch (error) {
+      return { error: error.message ?? 'User not created' }
+    }
   }
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.findAll();
+    return this.userRepository.findAll()
   }
 
   async findById(userId: string): Promise<User | null> {
-    return this.userRepository.findById(userId);
+    return this.userRepository.findById(userId)
   }
 
   async update(userId: string, userData: Partial<User>): Promise<User> {
-    return this.userRepository.update(userId, userData);
+    return this.userRepository.update(userId, userData)
   }
 
   async delete(userId: string): Promise<void> {
-    return this.userRepository.delete(userId);
+    return this.userRepository.delete(userId)
   }
 }

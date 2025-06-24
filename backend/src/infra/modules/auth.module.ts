@@ -6,6 +6,7 @@ import { AuthService } from '@/core/use-cases/auth.service';
 import { UserModule } from '@/infra/modules/user.module';
 import { UserRepository } from '@/adapters/repositories/user.repository';
 import { UserEntity } from '@/infra/db/entities/user.entity';
+import { JwtStrategy } from '@/adapters/controllers/jwt.strategy';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UserEntity } from '@/infra/db/entities/user.entity';
   controllers: [AuthController],
   providers: [
     AuthService,
+    JwtStrategy,
     {
       provide: UserRepository,
       useClass: UserRepository,

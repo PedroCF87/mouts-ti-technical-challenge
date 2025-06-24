@@ -1,9 +1,16 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "../",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testMatch": [
+    "**/src/core/use-cases/auth.service.spec.ts",
+    "**/src/core/use-cases/user.service.spec.ts"
+  ],
+  "verbose": true,
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^@/(.*)": "<rootDir>/src/$1"
   }
 }
