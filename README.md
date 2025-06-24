@@ -77,6 +77,12 @@ A tela de listagem de usuários é protegida e requer autenticação. Para acess
 
 Esses dados são inseridos no banco de dados através de uma *migration* durante a inicialização do backend, garantindo que um usuário de teste esteja sempre disponível.
 
+## Coleção Postman
+
+Para facilitar o teste manual da API, uma coleção do Postman está disponível na raiz do projeto. Você pode importá-la diretamente no Postman utilizando o arquivo [`postman_collection.json`](./postman_collection.json).
+
+---
+
 ## Como Executar os Testes
 
 Para rodar todos os testes automatizados do backend, execute o comando abaixo a partir da raiz do projeto:
