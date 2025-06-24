@@ -48,10 +48,7 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           PORT: ${{ vars.PORT }}
           API_URL: ${{ vars.API_URL }}
-        run: |
-          docker compose up -d --build
-          docker ps
-          echo ">> -------------------------------------- <<"
+        run: docker compose up -d --build
 
       - name: Wait for Services to be Ready
         run: |
