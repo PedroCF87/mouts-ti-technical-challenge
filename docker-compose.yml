@@ -22,7 +22,9 @@ services:
       - redis_data:/data
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
     container_name: mouts_backend
     restart: always
     depends_on:
@@ -35,18 +37,15 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
+      REDIS_URL: ${REDIS_URL}
       JWT_SECRET: ${JWT_SECRET}
     ports:
       - '3001:3001'
-    volumes:
-      - ./backend:/app
-    working_dir: /app
-    command: sh -c "npm install && npm install -g @nestjs/cli && npm run build && npm run start:prod"
 
   frontend:
-    build: ./frontend
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
     container_name: mouts_frontend
     restart: always
     depends_on:
