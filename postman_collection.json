@@ -611,7 +611,7 @@
 	"variable": [
 		{
 			"key": "host",
-			"value": "http://localhost:3001",
+			"value": "http://backend:3001",
 			"type": "string"
 		},
 		{
